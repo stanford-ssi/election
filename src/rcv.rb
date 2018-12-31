@@ -1,6 +1,15 @@
 require_relative 'format_data.rb'
 require_relative 'errors.rb'
 
+# Runs a Ranked-Choice voting algorithm
+#
+# Ballots should be an array of ballots, where each ballot is an array of 0 or more strings
+# Any individual string should represent a candidate
+# In the case of the SSI election, each "candidate" will actually be a pairing
+#
+# Tie breakers should also be an array of arrays.
+# Each array in it represents how to break a tie.
+# For example, the tie breaker ['A', 'B'] would mean that A beats B, and so if A and B got an equal number of first-place votes, B should be the one eliminated
 def rcv(ballots, tie_breakers)
   raise BallotError.new('Ballots must be non-empty') if ballots.empty?
 
@@ -34,6 +43,7 @@ def rcv(ballots, tie_breakers)
 
     # verify that you have enough tie breaking information
     raise TieBreakingError.new(candidate, last_place_candidate) unless broken_in_favor_of_candidate || broken_against_candidate
+    raise TieBreakingError.new(candidate, last_place_candidate) if broken_in_favor_of_candidate && broken_against_candidate
 
     last_place_candidate = candidate if broken_against_candidate
   end
