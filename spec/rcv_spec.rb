@@ -1,7 +1,16 @@
 require_relative '../src/format_data.rb'
 require_relative '../src/rcv.rb'
+require_relative '../src/errors.rb'
 
 describe 'rcv' do
+
+  it 'requires that there is at least one ballot' do
+    expect{ rcv([], nil) }.to raise_error(BallotError)
+  end
+
+  it 'requires that there is at least one ballot with a candidate' do
+    expect{ rcv([[]], nil) }.to raise_error(BallotError)
+  end
 
   it 'chooses a single candidate' do
     ballots = [
