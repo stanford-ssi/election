@@ -82,6 +82,22 @@ def extract_co_prez_selections(lines)
   selections
 end
 
+# Takes lines from a file and converts them to an array of tie breakings
+def extract_tie_breakers(lines)
+  validate_tie_breakers! lines
+
+  tie_breakers = []
+  lines.each do |line|
+    next if line.strip.empty?
+    next if line[0] == '#'
+
+    better_pair, worse_pair = line.split(' > ')
+    tie_breakers << better_pair.strip.beats(worse_pair.strip)
+  end
+
+  tie_breakers
+end
+
 # monkey patch String so that it's easier to keep track of the ordering in beats vs loses to
 class String
   def beats(other)

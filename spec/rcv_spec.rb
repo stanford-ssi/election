@@ -62,6 +62,24 @@ describe 'rcv' do
 
       expect(rcv(ballots, [])).to eq('A')
     end
+
+    it 'sets the elimination metedata if asked' do
+      ballots = [
+          ['A', 'B', 'C'],
+          ['A', 'C', 'B'],
+          ['B', 'A'],
+      ]
+
+      eliminations = []
+      rcv(ballots, [], eliminations)
+      expect(eliminations).to eq([
+                                     {
+                                         candidate: 'B',
+                                         votes: 1,
+                                         ordered_votes: [['B', 1], ['A', 2]]
+                                     }
+                                 ])
+    end
   end
 
   describe 'when breaking ties' do

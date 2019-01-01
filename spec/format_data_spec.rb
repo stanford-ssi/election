@@ -10,12 +10,12 @@ describe 'format_data' do
       result = convert_to_ranked_choices data, pairings
 
       expect(result).to eq([
-          ['C + D', 'A + B', 'A + B', 'D + E', 'A + D'],
-          ['A + D', 'C + D', 'A + B', 'A + B', 'D + E'],
-          ['A + D', 'C + D', 'A + B', 'D + E', 'A + B'],
-          ['D + E', 'C + E', 'B + C', 'A + D', 'A + E', 'A + C', 'B + D', 'A + B', 'B + E', 'C + D'],
-          ['A + B', 'B + E', 'A + E', 'A + C', 'C + E', 'D + E', 'C + D', 'B + D', 'B + C'],
-          ['A + E', 'B + E', 'B + C']
+                               ['C + D', 'A + B', 'A + B', 'D + E', 'A + D'],
+                               ['A + D', 'C + D', 'A + B', 'A + B', 'D + E'],
+                               ['A + D', 'C + D', 'A + B', 'D + E', 'A + B'],
+                               ['D + E', 'C + E', 'B + C', 'A + D', 'A + E', 'A + C', 'B + D', 'A + B', 'B + E', 'C + D'],
+                               ['A + B', 'B + E', 'A + E', 'A + C', 'C + E', 'D + E', 'C + D', 'B + D', 'B + C'],
+                               ['A + E', 'B + E', 'B + C']
                            ])
     end
 
@@ -52,12 +52,33 @@ describe 'format_data' do
   describe '#extract_co_prez_selections' do
     it 'calls validate' do
       expect{
-        validate_pairings! ['bogus']
+        extract_co_prez_selections ['bogus']
       }.to raise_error(DataValidationError)
     end
 
     it 'extracts selections' do
       expect(extract_co_prez_selections(['A + B', 'B + A', '', '  ', '# comment'])).to eq({'A' => 'B', 'B' => 'A'})
+    end
+  end
+
+  describe '#extract_tie_breakers' do
+    it 'calls validate' do
+      expect{
+        extract_tie_breakers ['bogus']
+      }.to raise_error(DataValidationError)
+    end
+
+    it 'extracts tie breakers' do
+      expect(extract_tie_breakers([
+                                      'A + B > B + C',
+                                      'A + C > B + C',
+                                      '',
+                                      '  ',
+                                      '# comment'
+                                  ])).to eq([
+                                                ['A + B', 'B + C'],
+                                                ['A + C', 'B + C']
+                                            ])
     end
   end
 
@@ -87,16 +108,16 @@ describe 'format_data' do
       it 'makes sure the names are extractable' do
         expect{
           validate_ballot! [
-                                     'Timestamp	Would you like to rank a full list of all 10 possible co-president candidate pairs, or to rank a single list with the five candidates?	Your Vote [A + B + C]	Your Vote [A + C]	Your Vote [A + D]	Your Vote [A + E]	Your Vote [B + C]	Your Vote [B + D]	Your Vote [B + E]	Your Vote [C + D]	Your Vote [C + E]	Your Vote [D + E]	Your Vote [A]	Your Vote [B]	Your Vote [C]	Your Vote [D]	Your Vote [E]	Select Two Financial Officers	Ian Gomez?'
-                                 ]
+                               'Timestamp	Would you like to rank a full list of all 10 possible co-president candidate pairs, or to rank a single list with the five candidates?	Your Vote [A + B + C]	Your Vote [A + C]	Your Vote [A + D]	Your Vote [A + E]	Your Vote [B + C]	Your Vote [B + D]	Your Vote [B + E]	Your Vote [C + D]	Your Vote [C + E]	Your Vote [D + E]	Your Vote [A]	Your Vote [B]	Your Vote [C]	Your Vote [D]	Your Vote [E]	Select Two Financial Officers	Ian Gomez?'
+                           ]
         }.to raise_error(DataValidationError)
       end
 
       it 'makes sure there are the right number of columns' do
         expect{
           validate_ballot! [
-                                     'Timestamp	Would you like to rank a full list of all 10 possible co-president candidate pairs, or to rank a single list with the five candidates?	Your Vote [A + B]	Your Vote [A + C]	Your Vote [A + D]	Your Vote [A + E]	Your Vote [B + C]	Your Vote [B + D]	Your Vote [B + E]	Your Vote [C + D]	Your Vote [C + E]	Your Vote [D + E]	Your Vote [A]	Your Vote [B]	Your Vote [C]	Your Vote [D]	Select Two Financial Officers	Ian Gomez?'
-                                 ]
+                               'Timestamp	Would you like to rank a full list of all 10 possible co-president candidate pairs, or to rank a single list with the five candidates?	Your Vote [A + B]	Your Vote [A + C]	Your Vote [A + D]	Your Vote [A + E]	Your Vote [B + C]	Your Vote [B + D]	Your Vote [B + E]	Your Vote [C + D]	Your Vote [C + E]	Your Vote [D + E]	Your Vote [A]	Your Vote [B]	Your Vote [C]	Your Vote [D]	Select Two Financial Officers	Ian Gomez?'
+                           ]
         }.to raise_error(DataValidationError)
       end
 

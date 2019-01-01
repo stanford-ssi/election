@@ -10,7 +10,7 @@ require_relative 'errors.rb'
 # Tie breakers should also be an array of arrays.
 # Each array in it represents how to break a tie.
 # For example, the tie breaker ['A', 'B'] would mean that A beats B, and so if A and B got an equal number of first-place votes, B should be the one eliminated
-def rcv(ballots, tie_breakers)
+def rcv(ballots, tie_breakers, eliminations=nil)
   raise BallotError.new('Ballots must be non-empty') if ballots.empty?
 
   # for each candidate, count how many first place votes they got
@@ -49,10 +49,15 @@ def rcv(ballots, tie_breakers)
   end
 
   # eliminate the candidate in last place
+  eliminations << {
+      candidate: last_place_candidate,
+      votes: last_place_vote_count,
+      ordered_votes: ordered_votes
+  } unless eliminations.nil?
   cleaned_ballots = ballots.map do |ballot|
     ballot.reject{|candidate| candidate == last_place_candidate }
   end
 
   # recurse on the cleaned ballots
-  rcv cleaned_ballots, tie_breakers
+  rcv cleaned_ballots, tie_breakers, eliminations
 end
