@@ -13,3 +13,7 @@ class TieBreakingError < ElectionError
   end
 
 end
+
+class DataValidationError < ElectionError
+
+end
