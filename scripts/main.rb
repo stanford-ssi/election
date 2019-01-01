@@ -29,4 +29,4 @@ def print_winner(ballot_file, pairing_file, tie_breaker_file)
   puts "\nWinner is: #{winner}"
 end
 
-# print_winner('spec/data/sample-ballots-1.tsv', 'spec/data/sample-pairings-1.txt', 'spec/data/sample-tie-breakers-1.txt')
+print_winner *ARGV unless ARGV.empty?

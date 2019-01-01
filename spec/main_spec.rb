@@ -8,8 +8,8 @@ describe 'main' do
     expect(winner).to eq('A + D')
   end
 
-  it 'can print out data' do
-    expected_output = %q{Instant runoff:
+  let(:expected_output) {
+    %q{Instant runoff:
 	Round 1: Eliminated D + E (had 1 first-place votes)
 	Round 2: Eliminated C + E (had 1 first-place votes)
 	Round 3: Eliminated C + D (had 1 first-place votes)
@@ -22,7 +22,9 @@ describe 'main' do
 
 Winner is: A + D
 }
+  }
 
+  it 'can print out data' do
     expect{
       print_winner('spec/data/sample-ballots-1.tsv', 'spec/data/sample-pairings-1.txt', 'spec/data/sample-tie-breakers-1.txt')
     }.to output(expected_output).to_stdout
