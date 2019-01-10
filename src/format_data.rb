@@ -4,7 +4,7 @@ require_relative 'errors'
 OPTION_INDEX = 1
 
 # the regex that says they are ranking all candidate pairings
-RANK_ALL = /I would like to rank all \d+ pairs/
+RANK_ALL = /I would like to rank all (\d+|possible) pairs/
 
 # the regex that says they are ranking individual candidates and turning it over to the co-prezes
 RANK_CO_PREZ = /I would like to rank the \d+ individual candidates/

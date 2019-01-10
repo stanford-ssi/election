@@ -29,4 +29,4 @@ def print_winner(ballot_file, pairing_file, tie_breaker_file)
   puts "\nWinner is: #{winner}"
 end
 
-print_winner *ARGV unless ARGV.empty?
+# print_winner *ARGV unless ARGV.empty?
